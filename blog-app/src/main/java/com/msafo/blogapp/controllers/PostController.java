@@ -81,42 +81,46 @@ public class PostController {
         return ResponseEntity.ok("Post successfully deleted.");
     }
 
-    @PutMapping("/post/{pid}")
+    @PutMapping("/post/update/{pid}")
     @PreAuthorize("hasRole('ROLE_USER')")
-    public ResponseEntity<?> updatePost(@RequestBody Post updatedPost, @PathVariable("pid") Long pid) throws Exception {
-
-        User user = getUser();
-
-        if (!updatedPost.getUser().getId().equals(user.getId())) {
-            return ResponseEntity.badRequest().body("Cannot update a post that is not yours.");
-        }
+    public ResponseEntity<Post> updatePost(@RequestBody Post updatedPost, @PathVariable("pid") Long pid) throws Exception {
 
         Post currentPost = postRepository.findById(pid).orElseThrow(()-> new Exception("Post not found."));
 
         currentPost.setPost(updatedPost.getPost());
 
-        postRepository.save(currentPost);
+        Post post = postRepository.save(currentPost);
 
-        return ResponseEntity.ok("Post successfully updated.");
+        return ResponseEntity.ok(post);
     }
 
     @PutMapping("/post/{pid}/any")
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR')")
-    public ResponseEntity<?> updateAnyPost(@RequestBody Post updatedPost, @PathVariable("aid") Long aid,  @PathVariable("pid") Long pid) throws Exception {
+    public ResponseEntity<Post> updateAnyPost(@RequestBody Post updatedPost, @PathVariable("pid") Long pid) throws Exception {
 
+
+        System.out.println(updatedPost.getPost());
         Post currentPost = postRepository.findById(pid).orElseThrow(()-> new Exception("Post not found."));
 
         currentPost.setPost(updatedPost.getPost());
 
-        postRepository.save(currentPost);
+        Post post = postRepository.save(currentPost);
 
-        return ResponseEntity.ok("Post successfully updated.");
+        return ResponseEntity.ok(post);
     }
 
     @GetMapping("/posts/article/{aid}")
     public ResponseEntity<List<Object>> getArticlePosts(@PathVariable("aid") Long aid) throws Exception {
 
         List<Object> posts = articleRepository.findPostsByArticleId(aid);
+
+        return ResponseEntity.ok(posts);
+    }
+
+    @GetMapping("/posts/article/{aid}/count")
+    public ResponseEntity<List<Object>> getArticlePostsByCount(@PathVariable("aid") Long aid) throws Exception {
+
+        List<Object> posts = articleRepository.findPostsByArticleIdCountSize(aid);
 
         return ResponseEntity.ok(posts);
     }

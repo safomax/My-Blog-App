@@ -2,12 +2,12 @@ body {
   margin: 0;
   height: 100%;
   width: 100%;
-  background-color: white;
+  background-color: rgb(249, 249, 249);
 }
 
-.loading-page{
+.loading-page {
 }
-.loading-page-text{
+.loading-page-text {
   top: 50%;
   left: 50%;
   transform: translate(-50%, -50%);
@@ -108,7 +108,6 @@ body {
   background-color: rgb(140, 166, 224);
   padding: 10px;
   border-radius: 5px;
-
 }
 .auth-buttons {
   border-radius: 10px;
@@ -221,7 +220,7 @@ nav {
 
 .header {
   height: 100px;
-  background-color: #5b5b5b;
+  background-color: #4c4c4c;
 }
 ul {
   list-style-type: none;
@@ -330,11 +329,10 @@ ul li ul li {
   box-shadow: rgba(0, 0, 0, 0.16) 0px 1px 4px;
 }
 
-.newest-article-div{
+.newest-article-div {
   background-color: red;
   z-index: 999;
 }
-
 
 .mod-pane {
   background-color: white;
@@ -398,8 +396,6 @@ ul li ul li {
 .article-text {
   margin-left: 10px;
   white-space: pre-wrap;
-  
-
 }
 
 .admin-mod-articles-pane {
@@ -454,7 +450,7 @@ ul li ul li {
   overflow: hidden;
 }
 
-.top-article-counter{
+.top-article-counter {
   background-color: rgb(97, 97, 196);
   padding: 5px 10px;
   color: white;
@@ -481,6 +477,7 @@ ul li ul li {
   border-width: 1px;
   margin: 10px;
   padding: 15px;
+  position: relative;
 }
 
 .add-comment {
@@ -524,7 +521,6 @@ ul li ul li {
   border-radius: 5px;
   box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   white-space: pre-wrap;
-
 }
 .view-user-profile {
   border-style: none;
@@ -544,7 +540,17 @@ ul li ul li {
 }
 
 .delete-button {
-  margin-right: 90px;
+  right: 45px;
+  top: 15px;
+  position: absolute;
+  text-align: right;
+  cursor: pointer;
+}
+
+.update-button{
+  top: 15px;
+  right: 70px;
+  position: absolute;
   text-align: right;
   cursor: pointer;
 }
@@ -660,10 +666,13 @@ ul li ul li {
 /************Dashboard************/
 .latest-blog-posts {
   background-color: rgb(255, 255, 255);
-  margin: 60px 0;
+  margin: 20px 0;
   justify-content: center;
   box-shadow: rgba(0, 0, 0, 0.02) 0px 1px 3px 0px,
     rgba(27, 31, 35, 0.15) 0px 0px 0px 0.5px;
+
+
 }
+
 
 /*************Footer**************/

@@ -3,8 +3,8 @@ import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import AuthenticationService from "../../services/authentication-service";
 import AccountService from "../../services/account-service";
 import { withRouter } from "react-router-dom";
-import { AiOutlineLogout } from "react-icons/ai";
-import { FiSettings } from "react-icons/fi";
+import { MdOutlineArticle } from "react-icons/md";
+import { BiUser } from "react-icons/bi";
 
 class NavigationComponent extends Component {
   constructor(props) {
@@ -68,13 +68,13 @@ class NavigationComponent extends Component {
                 <>
                   <li>
                     <Link className="a" to="/dashboard">
-                      Blog posts
+                      <MdOutlineArticle /> Blog posts
                     </Link>
                   </li>
 
                   <li>
                     <Link className="a" to="/profile">
-                      {this.state.name}, {this.state.role}
+                      <BiUser /> {this.state.name}, {this.state.role}
                     </Link>
                   </li>
 

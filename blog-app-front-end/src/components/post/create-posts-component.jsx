@@ -15,6 +15,8 @@ export default class CreatePostsComponent extends Component {
       post: "",
       created: "",
       role: [],
+      firstName: "",
+      lastName: "",
       commentError: "",
     };
 
@@ -23,7 +25,9 @@ export default class CreatePostsComponent extends Component {
 
   componentDidMount = () => {
     AccountService.getCurrentUser().then((response) => {
-      this.setState({ role: response.data.role[0].name });
+      this.setState({ role: response.data.role[0].name,
+      firstName: response.data.firstName,
+    lastName: response.data.lastName });
     });
   };
 
@@ -63,6 +67,8 @@ export default class CreatePostsComponent extends Component {
   render() {
     return (
       <div>
+        <h2>Conversations</h2>
+        <p>Comment as {this.state.firstName} {this.state.lastName} </p>
         {this.state.role != "" ? (
           <Form
             className=""

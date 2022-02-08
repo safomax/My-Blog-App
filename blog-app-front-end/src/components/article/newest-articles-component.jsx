@@ -5,6 +5,7 @@ import AccountService from "../../services/account-service";
 import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import { BiComment } from "react-icons/bi";
 import CreateArticleComponent from "./create-articles-component";
+import { RiArticleLine } from "react-icons/ri";
 
 class NewestArticlesComponent extends Component {
   constructor(props) {
@@ -70,7 +71,6 @@ class NewestArticlesComponent extends Component {
 
         <div
           style={{
-            backgroundColor: "#f2f2f2",
             padding: "15px",
             borderRadius: "10px",
           }}
@@ -79,13 +79,14 @@ class NewestArticlesComponent extends Component {
             <h2
               className="article-dashboard-text latest-blog-posts"
               style={{
-                backgroundColor: "#666699",
+                backgroundColor: "rgb(60, 61, 61)",
+
                 padding: 5,
                 color: "white",
                 textDecoration: "none",
               }}
             >
-              Latest blog posts
+              <RiArticleLine /> Latest blog posts
             </h2>
           </Link>
 

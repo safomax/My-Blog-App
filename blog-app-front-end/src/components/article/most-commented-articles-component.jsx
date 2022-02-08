@@ -4,6 +4,7 @@ import { withRouter } from "react-router-dom";
 import AccountService from "../../services/account-service";
 import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import { BiComment } from "react-icons/bi";
+import { AiOutlineComment} from "react-icons/ai"
 
 class MostCommentedArticlesComponent extends Component {
   constructor(props) {
@@ -49,22 +50,19 @@ class MostCommentedArticlesComponent extends Component {
       <div
         className=""
         style={{
-          backgroundColor: "#f2f2f2",
-          padding: "15px",
-          borderRadius: "10px",
         }}
       >
         <Link to="/dashboard">
           <h2
             className="article-dashboard-text"
             style={{
-              backgroundColor: "#666699",
-              padding: 5,
+              backgroundColor: "rgb(60, 61, 61)",
+              padding: "5px",
               color: "white",
               textDecoration: "none",
             }}
           >
-            Most commented
+           <AiOutlineComment/> Most commented
           </h2>
         </Link>
 
@@ -99,6 +97,8 @@ class MostCommentedArticlesComponent extends Component {
                 </p>
               </div>
             </div>
+
+            <div className="border"/>
           </div>
         ))}
       </div>

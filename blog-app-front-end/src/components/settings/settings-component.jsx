@@ -38,7 +38,7 @@ class SettingsComponent extends Component {
       return <div className="loading-page"><h3 className="loading-page-text">loading</h3></div>;
     }
     return (
-      <div>
+      <div style={{backgroundColor: "white"}}>
         <ChangePasswordComponent />
         <ChangeUsernameComponent />
       </div>

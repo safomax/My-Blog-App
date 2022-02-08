@@ -146,9 +146,11 @@ export default class ArticleComponent extends Component {
           <h1 className="article-text">{this.state.title}</h1>
 
           <p className="article-text">
-            Created by{" "}
-            <b style={{ color: "rgb(97, 97, 196)" }}>{this.state.user}</b> on{" "}
-            {this.state.created}
+            <b>
+              Created by{" "}
+              <b style={{ color: "rgb(97, 97, 196)" }}>{this.state.user}</b> on{" "}
+              {this.state.created}
+            </b>
           </p>
         </div>
 
@@ -157,7 +159,7 @@ export default class ArticleComponent extends Component {
           <div className="col-3 col-s-11">
             <div className="mod-pane">
               <h2 className="blog-post-buttons">
-                <MdOutlineSecurity /> Admin tools
+                <MdOutlineSecurity /> Administrative tools
               </h2>
 
               <div className="mod-admin-pane">
@@ -181,7 +183,7 @@ export default class ArticleComponent extends Component {
             </div>
           </div>
         ) : (
-          console.log("User cannot see this pane")
+          <></>
         )}
 
         <div className="article-portion col-8 col-s-11">
@@ -200,11 +202,13 @@ export default class ArticleComponent extends Component {
 
         <div className="col-8 col-s-11 ">
           <div className="conversations">
-            <div className="above-article-comment">
-              <h2>Conversations</h2>{" "}
+            <div
+              className="above-article-comment"
+              style={{ backgroundColor: "white" }}
+            >
               {this.state.role == "" ? (
                 <Link className="sign-in-to-post" to="/sign-in">
-                  Sign in to post
+                  <b>Sign in to post</b>
                 </Link>
               ) : (
                 <></>

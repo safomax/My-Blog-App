@@ -5,11 +5,12 @@ import Form from "react-validation/build/form";
 import AccountService from "../../services/account-service";
 import { withRouter } from "react-router";
 import VoteService from "../../services/vote-service";
-import { BsHandThumbsUp, BsHandThumbsDown, BsReply } from "react-icons/bs";
+import { BsHandThumbsUp, BsReply } from "react-icons/bs";
 import { AiOutlineDelete } from "react-icons/ai";
 import { BiComment } from "react-icons/bi";
 import CreatePostsComponent from "./create-posts-component";
-import axios from "axios";
+import { FiEdit } from "react-icons/fi";
+import CheckButton from "react-validation/build/button";
 
 class ArticlePostsComponent extends Component {
   constructor(props) {
@@ -22,7 +23,7 @@ class ArticlePostsComponent extends Component {
       showComponent: false,
       reply: "",
       postToReply: -1,
-
+      postToUpdate: -1,
       user_id: "",
       firstName: "",
       lastName: "",
@@ -30,18 +31,23 @@ class ArticlePostsComponent extends Component {
       articles: "",
       role: "",
       currentPost: "",
+      currentPostToUpdate: false,
+      updatedPost: "",
     };
 
     this.toggleReplyBox = this.toggleReplyBox.bind(this);
+    this.toggleUpdateBox = this.toggleUpdateBox.bind(this);
     this.postReply = this.postReply.bind(this);
     this.changeReplyHandler = this.changeReplyHandler.bind(this);
+    this.changeUpdatedPostHandler = this.changeUpdatedPostHandler.bind(this);
     this.viewUserProfile = this.viewUserProfile.bind(this);
-
     this.upvotePost = this.upvotePost.bind(this);
-
     this.deleteAnyPost = this.deleteAnyPost.bind(this);
     this.deletePost = this.deletePost.bind(this);
     this.rerenderParentCallback = this.rerenderParentCallback.bind(this);
+    this.updatePost = this.updatePost.bind(this);
+    this.updateAnyPost = this.updateAnyPost.bind(this);
+    this.refresh = this.refresh.bind(this);
   }
 
   componentDidMount() {
@@ -64,6 +70,10 @@ class ArticlePostsComponent extends Component {
       });
     });
   }
+
+  changeUpdatedPostHandler = (e) => {
+    this.setState({ updatedPost: e.target.value });
+  };
 
   toggleReplyBox(pid) {
     this.setState({
@@ -101,7 +111,59 @@ class ArticlePostsComponent extends Component {
   async upvotePost(id) {
     await VoteService.upvotePost(id);
 
-    await PostService.getArticlePosts(this.state.id).then((response) => {
+    this.refresh();
+  }
+
+  async deleteAnyPost(id) {
+    await PostService.deleteAnyPost(id);
+
+    this.refresh();
+  }
+
+  async deletePost(id) {
+    await PostService.deletePost(id);
+
+    this.refresh();
+  }
+
+  async updateAnyPost(id) {
+    let updatedPost = {
+      post: this.state.updatedPost,
+    };
+    await PostService.updateAnyPost(id, updatedPost)
+      .then(() => {
+        this.setState({ updatedPost: "" });
+      })
+      .catch(() => {});
+
+      this.setState({
+        currentPostToUpdate: !this.state.currentPostToUpdate,
+      });
+      
+      this.refresh();
+  }
+
+   async updatePost(id) {
+    let updatedPost = {
+      post: this.state.updatedPost,
+    };
+
+    await PostService.updatePost(id, updatedPost)
+      .then(() => {
+        this.setState({ updatedPost: "" });
+      })
+      .catch(() => {});
+
+      this.setState({
+        currentPostToUpdate: !this.state.currentPostToUpdate,
+      });
+    this.refresh();
+
+
+  }
+
+  async refresh() {
+     await PostService.getArticlePosts(this.state.id).then((response) => {
       this.setState({
         object: response.data,
       });
@@ -114,43 +176,13 @@ class ArticlePostsComponent extends Component {
     });
   }
 
-  async deleteAnyPost(id) {
-    await PostService.deleteAnyPost(id);
-
-    await PostService.getArticlePosts(this.state.id).then((response) => {
-      this.setState({
-        object: response.data,
-      });
-
-      let date = new Date();
-
-      for (var i = 0; i < this.state.object.length; i++) {
-        var obj = (this.state.object[i][3] = this.state.object[i][3].substring(
-          0,
-          10
-        ));
-      }
+  toggleUpdateBox = (pid, post) => {
+    this.setState({
+      postToUpdate: pid,
+      currentPostToUpdate: !this.state.currentPostToUpdate,
+      updatedPost: post
     });
-  }
-
-  async deletePost(id) {
-    await PostService.deletePost(id);
-
-    await PostService.getArticlePosts(this.state.id).then((response) => {
-      this.setState({
-        object: response.data,
-      });
-
-      let date = new Date();
-
-      for (var i = 0; i < this.state.object.length; i++) {
-        var obj = (this.state.object[i][3] = this.state.object[i][3].substring(
-          0,
-          10
-        ));
-      }
-    });
-  }
+  };
 
   rerenderParentCallback() {
     this.forceUpdate();
@@ -169,7 +201,15 @@ class ArticlePostsComponent extends Component {
 
   render() {
     return (
-      <div className="post-container">
+      <div
+        className="post-container"
+        style={{
+          backgroundColor: "white",
+          padding: "18px 3px 8px 8px",
+          justifyContent: "center",
+          marginBottom: "15px",
+        }}
+      >
         <CreatePostsComponent
           id={this.state.id}
           rerenderParentCallback={this.rerenderParentCallback}
@@ -177,7 +217,7 @@ class ArticlePostsComponent extends Component {
         <div>
           <h4>
             <BiComment />
-            {this.state.object.length} comments
+            {this.state.object.length} {"  "} comments
           </h4>
         </div>
 
@@ -191,8 +231,10 @@ class ArticlePostsComponent extends Component {
                       className="view-user-profile"
                       onClick={() => this.viewUserProfile(post[1])}
                     >
-                      <span className="user-name-comment">{post[0]}</span>
-
+                      <span className="user-name-comment">
+                        <b>{post[0]}</b>
+                      </span>
+                      <span> {""} |</span>
                       {post[6] === 1 ? (
                         <span className="admin-privilege"> ADMIN</span>
                       ) : (
@@ -208,25 +250,95 @@ class ArticlePostsComponent extends Component {
                     &nbsp;&nbsp;&nbsp;&nbsp; {post[3]}
                     {this.state.role == "ROLE_ADMIN" ||
                     this.state.role == "ROLE_MODERATOR" ? (
-                      <div
-                        className="delete-button"
-                        onClick={() => this.deleteAnyPost(post[1])}
-                      >
-                        <AiOutlineDelete />
+                      <div>
+                        <div
+                          className="delete-button"
+                          onClick={() => this.deleteAnyPost(post[1])}
+                        >
+                          <AiOutlineDelete />
+                        </div>
+
+                        <div
+                          className="update-button"
+                          onClick={() => this.toggleUpdateBox(post[1], post[2])}
+                        >
+                          <FiEdit />
+                        </div>
                       </div>
                     ) : (
                       <></>
                     )}
                     {this.state.role == "ROLE_USER" &&
                     this.state.user_id == post[4] ? (
-                      <div
-                        onClick={() => this.deletePost(post[1])}
-                        className="delete-button"
-                      >
-                        <AiOutlineDelete />
+                      <div>
+                        <div
+                          onClick={() => this.deletePost(post[1])}
+                          className="delete-button"
+                        >
+                          <AiOutlineDelete />
+                        </div>
+
+                        <div
+                          onClick={() => this.toggleUpdateBox(post[1], post[2])}
+                          className="update-button"
+                        >
+                          <FiEdit />
+                        </div>
                       </div>
                     ) : (
                       <div></div>
+                    )}
+                    {this.state.currentPostToUpdate == true &&
+                    this.state.postToUpdate === post[1] &&
+                    this.state.role === "ROLE_USER" ? (
+                      <div className="reply-comment">
+                        <div className="">
+                          <textarea
+                            placeholder="Edit"
+                            name="text"
+                            className="add-comment"
+                            value={this.state.updatedPost}
+                            onChange={this.changeUpdatedPostHandler}
+                          />
+                        </div>
+                        <button
+                          onClick={() =>
+                            this.updatePost(post[1])
+                          }
+                          className="submit-comment"
+                        >
+                          Update
+                        </button>
+                      </div>
+                    ) : (
+                      <></>
+                    )}
+                    {(this.state.currentPostToUpdate &&
+                      this.state.postToUpdate === post[1] &&
+                      this.state.role === "ROLE_ADMIN") ||
+                    this.state.role === "ROLE_MODERATOR" ? (
+                      <div className="reply-comment">
+                        <div className="">
+                          <textarea
+                            placeholder="Edit"
+                            name="text"
+                            className="add-comment"
+                            value={this.state.updatedPost}
+                            onChange={this.changeUpdatedPostHandler}
+                          />
+                        </div>
+
+                        <button
+                          onClick={() =>
+                            this.updateAnyPost(post[1])
+                          }
+                          className="submit-comment"
+                        >
+                          Update
+                        </button>
+                      </div>
+                    ) : (
+                      <></>
                     )}
                   </div>
 

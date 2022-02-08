@@ -28,7 +28,7 @@ class PostService {
   };
 
   updatePost = (pid, updatedPost) => {
-    return axios.put(`${API_BASE_URL}/post/${pid}`, updatedPost, {
+    return axios.put(`${API_BASE_URL}/post/update/${pid}`, updatedPost, {
       withCredentials: true,
     });
   };

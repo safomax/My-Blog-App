@@ -3,6 +3,7 @@ import ArticleService from "../../services/article-service";
 import { withRouter } from "react-router-dom";
 import AccountService from "../../services/account-service";
 import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
+import { RiArticleLine } from "react-icons/ri";
 
 class TopArticlesComponent extends Component {
   constructor(props) {
@@ -26,9 +27,8 @@ class TopArticlesComponent extends Component {
     });
 
     for (var i = 0; i < this.state.articles.length; i++) {
-      var obj = (this.state.articles[i][5] = this.state.articles[
-        i
-      ][5].substring(0, 10));
+
+      this.state.articles[i][2] = this.state.articles[i][2].substring(0, 10);
     }
 
     await AccountService.getCurrentUser().then((response) => {
@@ -51,7 +51,10 @@ class TopArticlesComponent extends Component {
     return (
       <div className="articles-pane right">
         <Link to="/dashboard">
-          <h2 className="blog-post-buttons">Latest blog posts</h2>
+          <h2 className="blog-post-buttons">
+            <RiArticleLine />
+            Latest blog posts
+          </h2>
         </Link>
         {this.state.articles.map((article, i) => (
           <h3
