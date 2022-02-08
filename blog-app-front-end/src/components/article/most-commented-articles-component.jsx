@@ -4,7 +4,7 @@ import { withRouter } from "react-router-dom";
 import AccountService from "../../services/account-service";
 import { BrowserRouter as Router, Route, Switch, Link } from "react-router-dom";
 import { BiComment } from "react-icons/bi";
-import { AiOutlineComment} from "react-icons/ai"
+import { AiOutlineComment } from "react-icons/ai";
 
 class MostCommentedArticlesComponent extends Component {
   constructor(props) {
@@ -23,14 +23,6 @@ class MostCommentedArticlesComponent extends Component {
       this.setState({
         articles: response.data,
       });
-
-      let date = new Date();
-
-      for (var i = 0; i < this.state.articles.length; i++) {
-        this.state.articles[i][2] = this.state.articles[i][2].substring(0, 10);
-      }
-
-      console.log(this.state.articles);
     });
 
     AccountService.getCurrentUser().then((response) => {
@@ -47,11 +39,7 @@ class MostCommentedArticlesComponent extends Component {
 
   render() {
     return (
-      <div
-        className=""
-        style={{
-        }}
-      >
+      <div className="" style={{}}>
         <Link to="/dashboard">
           <h2
             className="article-dashboard-text"
@@ -62,7 +50,7 @@ class MostCommentedArticlesComponent extends Component {
               textDecoration: "none",
             }}
           >
-           <AiOutlineComment/> Most commented
+            <AiOutlineComment /> Most commented
           </h2>
         </Link>
 
@@ -78,7 +66,7 @@ class MostCommentedArticlesComponent extends Component {
                 </p>
 
                 <div>
-                  <p className="">{article[2]}</p>
+                  <p className="">{article[2].substring(0,10)}</p>
                 </div>
 
                 <p>
@@ -98,7 +86,7 @@ class MostCommentedArticlesComponent extends Component {
               </div>
             </div>
 
-            <div className="border"/>
+            <div className="border" />
           </div>
         ))}
       </div>

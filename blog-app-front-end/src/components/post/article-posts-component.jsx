@@ -56,11 +56,6 @@ class ArticlePostsComponent extends Component {
         object: response.data,
       });
 
-      let date = new Date();
-
-      for (var i = 0; i < this.state.object.length; i++) {
-        this.state.object[i][3] = this.state.object[i][3].substring(0, 10);
-      }
     });
 
     AccountService.getCurrentUser().then((response) => {
@@ -157,6 +152,7 @@ class ArticlePostsComponent extends Component {
       this.setState({
         currentPostToUpdate: !this.state.currentPostToUpdate,
       });
+      
     this.refresh();
 
 
@@ -171,8 +167,10 @@ class ArticlePostsComponent extends Component {
       let date = new Date();
 
       for (var i = 0; i < this.state.object.length; i++) {
+        this.setState({})
         this.state.object[i][3] = this.state.object[i][3].substring(0, 10);
       }
+
     });
   }
 
@@ -194,7 +192,6 @@ class ArticlePostsComponent extends Component {
 
       for (var i = 0; i < this.state.object.length; i++) {
         this.state.object[i][3] = this.state.object[i][3].substring(0, 10);
-        console.log(this.state.object[i][3]);
       }
     });
   }
@@ -247,7 +244,7 @@ class ArticlePostsComponent extends Component {
                         <></>
                       )}
                     </button>{" "}
-                    &nbsp;&nbsp;&nbsp;&nbsp; {post[3]}
+                    &nbsp;&nbsp;&nbsp;&nbsp; {post[3].substring(0,10)}
                     {this.state.role == "ROLE_ADMIN" ||
                     this.state.role == "ROLE_MODERATOR" ? (
                       <div>

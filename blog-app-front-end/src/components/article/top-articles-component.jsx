@@ -26,11 +26,6 @@ class TopArticlesComponent extends Component {
       });
     });
 
-    for (var i = 0; i < this.state.articles.length; i++) {
-
-      this.state.articles[i][2] = this.state.articles[i][2].substring(0, 10);
-    }
-
     await AccountService.getCurrentUser().then((response) => {
       this.setState({
         role: this.state.role,

@@ -517,9 +517,8 @@ ul li ul li {
 .comment-from-user {
   padding: 15px;
   margin: 10px;
-  background-color: rgb(227, 229, 233);
+  background-color: rgb(244, 244, 244);
   border-radius: 5px;
-  box-shadow: rgba(149, 157, 165, 0.2) 0px 8px 24px;
   white-space: pre-wrap;
 }
 .view-user-profile {
@@ -540,7 +539,7 @@ ul li ul li {
 }
 
 .delete-button {
-  right: 45px;
+  right: 40px;
   top: 15px;
   position: absolute;
   text-align: right;
@@ -549,7 +548,7 @@ ul li ul li {
 
 .update-button{
   top: 15px;
-  right: 70px;
+  right: 80px;
   position: absolute;
   text-align: right;
   cursor: pointer;

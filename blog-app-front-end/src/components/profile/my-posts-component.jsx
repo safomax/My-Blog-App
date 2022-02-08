@@ -23,16 +23,6 @@ class MyPostsComponent extends Component {
         articles: res.data,
       });
     });
-
-    let date = new Date();
-
-    console.log(date);
-
-    for (var i = 0; i < this.state.articles.length; i++) {
-      var obj = (this.state.articles[i][2] = this.state.articles[
-        i
-      ][2].substring(0, 10));
-    }
   }
 
   visitArticle = (id, title) => {
@@ -56,7 +46,7 @@ class MyPostsComponent extends Component {
                     <p className="profile-pane-text">
                       <b>{article[1]}</b>
                     </p>
-                    {article[2]}
+                    {article[2].substring(0,10)}
                   </div>
                 </div>
               </div>

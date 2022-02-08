@@ -98,6 +98,7 @@ class ProfileComponent extends Component {
                 <button
                   className="profile-component-buttons"
                   onClick={this.showAboutMeComponent}
+                  
                 >
                   <CgProfile /> About me
                 </button>
@@ -129,7 +130,7 @@ class ProfileComponent extends Component {
 
         {this.state.aboutMeComponent === true ? (
           <div>
-            <h3>About me</h3>
+            <h3 style={{marginLeft: "20px"}}>About me</h3>
 
             <div className="profile-pane col-8 col-s-11">
               <div className="profile-user-info">

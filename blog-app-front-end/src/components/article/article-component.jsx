@@ -51,7 +51,7 @@ export default class ArticleComponent extends Component {
       this.setState({
         title: response.data.title,
         text: response.data.text,
-        created: response.data.created.substring(0, 10),
+        created: response.data.created,
       });
     });
 
@@ -118,7 +118,7 @@ export default class ArticleComponent extends Component {
       this.setState({
         title: response.data.title,
         text: response.data.text,
-        created: response.data.created.substring(0, 10),
+        created: response.data.created,
       });
     });
   };
@@ -149,7 +149,7 @@ export default class ArticleComponent extends Component {
             <b>
               Created by{" "}
               <b style={{ color: "rgb(97, 97, 196)" }}>{this.state.user}</b> on{" "}
-              {this.state.created}
+              {this.state.created.substring(0,10)}
             </b>
           </p>
         </div>

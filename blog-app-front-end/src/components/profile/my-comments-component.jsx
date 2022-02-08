@@ -23,10 +23,6 @@ class MyCommentsComponent extends Component {
       });
     });
 
-    let date = new Date();
-    for (var i = 0; i < this.state.posts.length; i++) {
-      this.state.posts[i][2] = this.state.posts[i][2].substring(0, 10);
-    }
   }
 
   render() {
@@ -39,7 +35,7 @@ class MyCommentsComponent extends Component {
             {this.state.posts.map((post) => (
               <div className="profile-pane">
                 <div>
-                  <h3>{post[0]}</h3> {post[2]}
+                  <h3>{post[0]}</h3> {post[2].substring(0,10)}
                 </div>
                 <div className="comment-from-user">{post[1]}</div>
               </div>

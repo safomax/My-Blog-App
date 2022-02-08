@@ -25,12 +25,6 @@ class NewestArticlesComponent extends Component {
       this.setState({
         articles: response.data,
       });
-
-      for (var i = 0; i < this.state.articles.length; i++) {
-        var obj = (this.state.articles[i][2] = this.state.articles[
-          i
-        ][2].substring(0, 10));
-      }
     });
 
     await AccountService.getCurrentUser().then((response) => {
@@ -101,7 +95,7 @@ class NewestArticlesComponent extends Component {
                     <p className="most-commented-article-text">
                       <b>{article[1]}</b>
                     </p>
-                    <p className="">{article[2]}</p>
+                    <p className="">{article[2].substring(0,10)}</p>
                     <p className="">
                       By{" "}
                       <span style={{ color: "rgb(97, 97, 196)" }}>

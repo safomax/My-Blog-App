@@ -119,7 +119,7 @@ export default class OtherUsersComponent extends Component {
 
         {this.state.aboutUserComponent === true ? (
           <div>
-            <h3>About user</h3>
+            <h3 style={{marginLeft: "20px"}}>About user</h3>
 
             <div className="profile-pane col-8 col-s-11">
               <div className="profile-user-info">
