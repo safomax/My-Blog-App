@@ -30,12 +30,15 @@ public class Post {
     @ManyToOne(fetch = FetchType.LAZY)
     private Article article;
 
-    @ManyToOne(fetch = FetchType.LAZY)
+    @JsonIgnore
+    @ManyToOne(fetch = FetchType.EAGER)
+    @JoinColumn(name = "parent_id")
     private Post parent;
 
-    @OneToMany(fetch = FetchType.LAZY,mappedBy = "parent")
+    @OneToMany(fetch = FetchType.LAZY,mappedBy = "parent", cascade = CascadeType.ALL)
     private Set<Post> replies;
 
+    @JsonIgnore
     @OneToMany(mappedBy = "post", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Vote> votes = new ArrayList<>();
 

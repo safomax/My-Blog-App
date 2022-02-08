@@ -68,7 +68,6 @@ export default class CreatePostsComponent extends Component {
     return (
       <div>
         <h2>Conversations</h2>
-        <p>Comment as {this.state.firstName} {this.state.lastName} </p>
         {this.state.role != "" ? (
           <Form
             className=""
@@ -78,6 +77,8 @@ export default class CreatePostsComponent extends Component {
             }}
           >
             <div className="">
+            <p>Comment as {this.state.firstName} {this.state.lastName} </p>
+
               <Textarea
                 placeholder="What do you think?"
                 name="comment"

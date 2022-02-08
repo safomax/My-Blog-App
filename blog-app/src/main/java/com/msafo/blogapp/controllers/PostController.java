@@ -15,7 +15,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
 import java.sql.Date;
-import java.util.List;
+import java.util.*;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -98,8 +98,6 @@ public class PostController {
     @PreAuthorize("hasRole('ROLE_ADMIN') or hasRole('ROLE_MODERATOR')")
     public ResponseEntity<Post> updateAnyPost(@RequestBody Post updatedPost, @PathVariable("pid") Long pid) throws Exception {
 
-
-        System.out.println(updatedPost.getPost());
         Post currentPost = postRepository.findById(pid).orElseThrow(()-> new Exception("Post not found."));
 
         currentPost.setPost(updatedPost.getPost());
@@ -113,14 +111,6 @@ public class PostController {
     public ResponseEntity<List<Object>> getArticlePosts(@PathVariable("aid") Long aid) throws Exception {
 
         List<Object> posts = articleRepository.findPostsByArticleId(aid);
-
-        return ResponseEntity.ok(posts);
-    }
-
-    @GetMapping("/posts/article/{aid}/count")
-    public ResponseEntity<List<Object>> getArticlePostsByCount(@PathVariable("aid") Long aid) throws Exception {
-
-        List<Object> posts = articleRepository.findPostsByArticleIdCountSize(aid);
 
         return ResponseEntity.ok(posts);
     }
@@ -154,11 +144,25 @@ public class PostController {
     }
 
     @PostMapping("/reply-to-post/{pid}")
-    public ResponseEntity<List<Object>> replyToPost(@PathVariable("pid") Long pid) {
+    public ResponseEntity<?> replyToPost(@PathVariable("pid") Long pid, @RequestBody Post newPost) throws Exception {
 
-        List<Object> getPostsWithArticle = userRepository.getPostsWithArticle(pid);
+        User user = getUser();
 
-        return ResponseEntity.ok(getPostsWithArticle);
+        Post post = postRepository.findById(pid).orElseThrow(()-> new Exception ("Post not found"));
+
+        newPost.setParent(post);
+
+        newPost.setArticle(post.getArticle());
+
+        newPost.setUser(user);
+
+        Date date = new java.sql.Date(System.currentTimeMillis());
+
+        newPost.setCreated(date);
+
+        postRepository.save(newPost);
+
+        return ResponseEntity.ok("Replied to post with pid of " + pid);
     }
 
     public User getUser() {

@@ -55,7 +55,6 @@ class ArticlePostsComponent extends Component {
       this.setState({
         object: response.data,
       });
-
     });
 
     AccountService.getCurrentUser().then((response) => {
@@ -77,14 +76,23 @@ class ArticlePostsComponent extends Component {
     });
   }
 
-  postReply() {
+  async postReply(id) {
     let post = {
       post: this.state.reply,
     };
 
-    console.log(this.state.postToReply);
+    await PostService.createReply(id, post);
 
-    PostService.createReply(this.state.id, post);
+    this.setState({
+      showComponent: !this.state.showComponent,
+      reply: "",
+    });
+
+    await PostService.getArticlePosts(this.state.id).then((response) => {
+      this.setState({
+        object: response.data,
+      });
+    });
   }
 
   changeReplyHandler = (e) => {
@@ -131,14 +139,14 @@ class ArticlePostsComponent extends Component {
       })
       .catch(() => {});
 
-      this.setState({
-        currentPostToUpdate: !this.state.currentPostToUpdate,
-      });
-      
-      this.refresh();
+    this.setState({
+      currentPostToUpdate: !this.state.currentPostToUpdate,
+    });
+
+    this.refresh();
   }
 
-   async updatePost(id) {
+  async updatePost(id) {
     let updatedPost = {
       post: this.state.updatedPost,
     };
@@ -149,17 +157,15 @@ class ArticlePostsComponent extends Component {
       })
       .catch(() => {});
 
-      this.setState({
-        currentPostToUpdate: !this.state.currentPostToUpdate,
-      });
-      
+    this.setState({
+      currentPostToUpdate: !this.state.currentPostToUpdate,
+    });
+
     this.refresh();
-
-
   }
 
   async refresh() {
-     await PostService.getArticlePosts(this.state.id).then((response) => {
+    await PostService.getArticlePosts(this.state.id).then((response) => {
       this.setState({
         object: response.data,
       });
@@ -167,10 +173,9 @@ class ArticlePostsComponent extends Component {
       let date = new Date();
 
       for (var i = 0; i < this.state.object.length; i++) {
-        this.setState({})
+        this.setState({});
         this.state.object[i][3] = this.state.object[i][3].substring(0, 10);
       }
-
     });
   }
 
@@ -178,7 +183,7 @@ class ArticlePostsComponent extends Component {
     this.setState({
       postToUpdate: pid,
       currentPostToUpdate: !this.state.currentPostToUpdate,
-      updatedPost: post
+      updatedPost: post,
     });
   };
 
@@ -195,6 +200,194 @@ class ArticlePostsComponent extends Component {
       }
     });
   }
+
+  getCurrent = (post) =>
+    this.state.object
+      .filter((cPost) => cPost[7] == post)
+      .map((cPost) => (
+        <ul key={`${cPost[1]}`}>
+          <ol key={`${cPost[1]}`}>
+            <div style={{ color: "black" }}>
+              <div className="individual-comment">
+                <div>
+                  <div>
+                    <div>
+                      <div>
+                        <button
+                          className="view-user-profile"
+                          onClick={() => this.viewUserProfile(cPost[1])}
+                        >
+                          <span className="user-name-comment">
+                            <b>{cPost[0]}</b>
+                          </span>
+                          <span> {""} |</span>
+                          {cPost[6] === 1 ? (
+                            <span className="admin-privilege"> ADMIN</span>
+                          ) : (
+                            <></>
+                          )}
+
+                          {cPost[6] === 2 ? (
+                            <span className="moderator-privilege">
+                              {" "}
+                              MODERATOR
+                            </span>
+                          ) : (
+                            <></>
+                          )}
+                        </button>{" "}
+                        &nbsp;&nbsp;&nbsp;&nbsp; {cPost[3].substring(0, 10)}
+                        {this.state.role == "ROLE_ADMIN" ||
+                        this.state.role == "ROLE_MODERATOR" ? (
+                          <div>
+                            <div
+                              className="delete-button"
+                              onClick={() => this.deleteAnyPost(cPost[1])}
+                            >
+                              <AiOutlineDelete />
+                            </div>
+
+                            <div
+                              className="update-button"
+                              onClick={() =>
+                                this.toggleUpdateBox(cPost[1], cPost[2])
+                              }
+                            >
+                              <FiEdit />
+                            </div>
+                          </div>
+                        ) : (
+                          <></>
+                        )}
+                        {this.state.role == "ROLE_USER" &&
+                        this.state.user_id == cPost[4] ? (
+                          <div>
+                            <div
+                              onClick={() => this.deletePost(cPost[1])}
+                              className="delete-button"
+                            >
+                              <AiOutlineDelete />
+                            </div>
+
+                            <div
+                              onClick={() =>
+                                this.toggleUpdateBox(cPost[1], cPost[2])
+                              }
+                              className="update-button"
+                            >
+                              <FiEdit />
+                            </div>
+                          </div>
+                        ) : (
+                          <div></div>
+                        )}
+                        {this.state.currentPostToUpdate == true &&
+                        this.state.postToUpdate === cPost[1] &&
+                        this.state.role === "ROLE_USER" ? (
+                          <div className="reply-comment">
+                            <div className="">
+                              <textarea
+                                placeholder="Edit"
+                                name="text"
+                                className="add-comment"
+                                value={this.state.updatedPost}
+                                onChange={this.changeUpdatedPostHandler}
+                              />
+                            </div>
+                            <button
+                              onClick={() => this.updatePost(cPost[1])}
+                              className="submit-comment"
+                            >
+                              Update
+                            </button>
+                          </div>
+                        ) : (
+                          <></>
+                        )}
+                        {(this.state.currentPostToUpdate &&
+                          this.state.postToUpdate === cPost[1] &&
+                          this.state.role === "ROLE_ADMIN") ||
+                        this.state.role === "ROLE_MODERATOR" ? (
+                          <div className="reply-comment">
+                            <div className="">
+                              <textarea
+                                placeholder="Edit"
+                                name="text"
+                                className="add-comment"
+                                value={this.state.updatedPost}
+                                onChange={this.changeUpdatedPostHandler}
+                              />
+                            </div>
+
+                            <button
+                              onClick={() => this.updateAnyPost(cPost[1])}
+                              className="submit-comment"
+                            >
+                              Update
+                            </button>
+                          </div>
+                        ) : (
+                          <></>
+                        )}
+                      </div>
+
+                      <div className="comment-from-user">{cPost[2]}</div>
+                    </div>
+                  </div>
+                  {this.state.role !== "" ? (
+                    <button
+                      className="reply-button"
+                      onClick={() => this.toggleReplyBox(cPost[1])}
+                    >
+                      <BsReply />
+                    </button>
+                  ) : (
+                    <></>
+                  )}
+
+                  <div className="reply-comment">
+                    {this.state.showComponent &&
+                    this.state.postToReply == cPost[1] ? (
+                      <div>
+                        <div className="">
+                          <textarea
+                            placeholder="Comment"
+                            name="reply"
+                            className="add-comment"
+                            value={this.state.reply}
+                            onChange={this.changeReplyHandler}
+                          />
+                        </div>
+
+                        <button
+                          onClick={() => this.postReply(cPost[1])}
+                          className="submit-comment"
+                        >
+                          Reply
+                        </button>
+                      </div>
+                    ) : null}
+                  </div>
+                </div>
+
+                {this.state.role !== "" ? (
+                  <>
+                    <span
+                      className="upvote-buttons"
+                      onClick={() => this.upvotePost(cPost[1])}
+                    >
+                      <BsHandThumbsUp /> {cPost[5]}
+                    </span>
+                  </>
+                ) : (
+                  <></>
+                )}
+              </div>
+            </div>
+            {this.getCurrent(cPost[1])}
+          </ol>
+        </ul>
+      ));
 
   render() {
     return (
@@ -218,190 +411,7 @@ class ArticlePostsComponent extends Component {
           </h4>
         </div>
 
-        {this.state.object.map((post) => (
-          <div className="individual-comment">
-            <div>
-              <div>
-                <div>
-                  <div>
-                    <button
-                      className="view-user-profile"
-                      onClick={() => this.viewUserProfile(post[1])}
-                    >
-                      <span className="user-name-comment">
-                        <b>{post[0]}</b>
-                      </span>
-                      <span> {""} |</span>
-                      {post[6] === 1 ? (
-                        <span className="admin-privilege"> ADMIN</span>
-                      ) : (
-                        <></>
-                      )}
-
-                      {post[6] === 2 ? (
-                        <span className="moderator-privilege"> MODERATOR</span>
-                      ) : (
-                        <></>
-                      )}
-                    </button>{" "}
-                    &nbsp;&nbsp;&nbsp;&nbsp; {post[3].substring(0,10)}
-                    {this.state.role == "ROLE_ADMIN" ||
-                    this.state.role == "ROLE_MODERATOR" ? (
-                      <div>
-                        <div
-                          className="delete-button"
-                          onClick={() => this.deleteAnyPost(post[1])}
-                        >
-                          <AiOutlineDelete />
-                        </div>
-
-                        <div
-                          className="update-button"
-                          onClick={() => this.toggleUpdateBox(post[1], post[2])}
-                        >
-                          <FiEdit />
-                        </div>
-                      </div>
-                    ) : (
-                      <></>
-                    )}
-                    {this.state.role == "ROLE_USER" &&
-                    this.state.user_id == post[4] ? (
-                      <div>
-                        <div
-                          onClick={() => this.deletePost(post[1])}
-                          className="delete-button"
-                        >
-                          <AiOutlineDelete />
-                        </div>
-
-                        <div
-                          onClick={() => this.toggleUpdateBox(post[1], post[2])}
-                          className="update-button"
-                        >
-                          <FiEdit />
-                        </div>
-                      </div>
-                    ) : (
-                      <div></div>
-                    )}
-                    {this.state.currentPostToUpdate == true &&
-                    this.state.postToUpdate === post[1] &&
-                    this.state.role === "ROLE_USER" ? (
-                      <div className="reply-comment">
-                        <div className="">
-                          <textarea
-                            placeholder="Edit"
-                            name="text"
-                            className="add-comment"
-                            value={this.state.updatedPost}
-                            onChange={this.changeUpdatedPostHandler}
-                          />
-                        </div>
-                        <button
-                          onClick={() =>
-                            this.updatePost(post[1])
-                          }
-                          className="submit-comment"
-                        >
-                          Update
-                        </button>
-                      </div>
-                    ) : (
-                      <></>
-                    )}
-                    {(this.state.currentPostToUpdate &&
-                      this.state.postToUpdate === post[1] &&
-                      this.state.role === "ROLE_ADMIN") ||
-                    this.state.role === "ROLE_MODERATOR" ? (
-                      <div className="reply-comment">
-                        <div className="">
-                          <textarea
-                            placeholder="Edit"
-                            name="text"
-                            className="add-comment"
-                            value={this.state.updatedPost}
-                            onChange={this.changeUpdatedPostHandler}
-                          />
-                        </div>
-
-                        <button
-                          onClick={() =>
-                            this.updateAnyPost(post[1])
-                          }
-                          className="submit-comment"
-                        >
-                          Update
-                        </button>
-                      </div>
-                    ) : (
-                      <></>
-                    )}
-                  </div>
-
-                  <div className="comment-from-user">{post[2]}</div>
-                </div>
-              </div>
-              {this.state.role !== "" ? (
-                <button
-                  className="reply-button"
-                  onClick={() => this.toggleReplyBox(post[1])}
-                >
-                  <BsReply />
-                </button>
-              ) : (
-                <></>
-              )}
-
-              <div className="reply-comment">
-                {this.state.showComponent &&
-                this.state.postToReply == post[1] ? (
-                  <div>
-                    <Form
-                      className=""
-                      onSubmit={this.postReply}
-                      ref={(c) => {
-                        this.form = c;
-                      }}
-                    >
-                      <div className="">
-                        <Textarea
-                          placeholder="Comment"
-                          name="reply"
-                          className="add-comment"
-                          value={this.state.reply}
-                          onChange={this.changeReplyHandler}
-                        />
-                      </div>
-
-                      {this.state.role != "" ? (
-                        <div className="">
-                          {" "}
-                          <BsReply />
-                        </div>
-                      ) : (
-                        <></>
-                      )}
-                    </Form>
-                  </div>
-                ) : null}
-              </div>
-            </div>
-
-            {this.state.role !== "" ? (
-              <>
-                <span
-                  className="upvote-buttons"
-                  onClick={() => this.upvotePost(post[1])}
-                >
-                  <BsHandThumbsUp /> {post[5]}
-                </span>
-              </>
-            ) : (
-              <></>
-            )}
-          </div>
-        ))}
+        {this.getCurrent(null)}
       </div>
     );
   }

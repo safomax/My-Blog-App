@@ -17,6 +17,9 @@ function App() {
     <div>
       <Router>
         <Switch>
+
+
+
           {/* Authentication/Verification */}
           <Route path="/sign-in" component={SignInComponent} />
           <Route path="/sign-up" component={SignUpComponent} />

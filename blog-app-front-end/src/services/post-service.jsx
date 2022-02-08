@@ -9,8 +9,8 @@ class PostService {
     });
   };
 
-  createReply = (aid, reply) => {
-    return axios.post(`${API_BASE_URL}/reply/article/${aid}`, reply, {
+  createReply = (pid, post) => {
+    return axios.post(`${API_BASE_URL}/reply-to-post/${pid}`, post, {
       withCredentials: true,
     });
   };

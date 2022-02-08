@@ -257,6 +257,7 @@ export default class ArticleComponent extends Component {
         <Modal show={this.state.showDeleteFail} handleClose={this.hideModal}>
           <p className="delete-fail">Can not delete someone else's article!</p>
         </Modal>
+
       </div>
     );
   }

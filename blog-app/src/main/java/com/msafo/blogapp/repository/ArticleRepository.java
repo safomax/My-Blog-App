@@ -14,7 +14,7 @@ public interface ArticleRepository extends JpaRepository<Article, Long> {
             "article.id = ?1 ", nativeQuery = true)
     String findUserByArticleId(Long id);
 
-    @Query(value = "SELECT CONCAT(user.first_name, ' ', user.last_name), post.id, post.post, post.created, user.id AS 'users_id', COUNT(vote.id) AS votes, user_roles.role_id as role from post INNER JOIN user ON user.id = post.user_id INNER JOIN user_roles ON user_roles.user_id = user.id INNER JOIN article on post.article_id = article.id LEFT JOIN vote on post.id = vote.post_id WHERE article.id = ?1 GROUP BY post.id, CONCAT(user.first_name, ' ', user.last_name), post.post, post.created, user.id, user_roles.role_id order by post.created desc", nativeQuery = true)
+    @Query(value = "SELECT CONCAT(user.first_name, ' ', user.last_name), post.id, post.post, post.created, user.id AS 'users_id', COUNT(vote.id) AS votes, user_roles.role_id as role, post.parent_id from post INNER JOIN user ON user.id = post.user_id INNER JOIN user_roles ON user_roles.user_id = user.id INNER JOIN article on post.article_id = article.id LEFT JOIN vote on post.id = vote.post_id WHERE article.id = ?1 GROUP BY post.id, CONCAT(user.first_name, ' ', user.last_name), post.post, post.created, user.id, user_roles.role_id order by post.created desc", nativeQuery = true)
     List<Object> findPostsByArticleId(Long aid);
 
     @Query(value = "SELECT CONCAT(user.first_name, ' ', user.last_name), post.id,\n" +
