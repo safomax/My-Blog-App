@@ -1,0 +1,46 @@
+version: '3'
+services:
+  backend:
+    build: ./blog-app
+    ports:
+      - "8080:8080"
+    depends_on:
+      database:
+        condition: service_healthy
+      redis:
+        condition: service_started
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mysql://database:3306/blogAppDb
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: pokuaah
+      SPRING_REDIS_HOST: redis
+      SPRING_REDIS_PORT: 6379
+
+  database:
+    build: ./mysql
+    image: mysql:latest
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      interval: 10s  # Adjust interval based on your application's startup time
+      timeout: 5s
+      retries: 3
+    environment:
+      MYSQL_ROOT_PASSWORD: pokuaah
+      MYSQL_DATABASE: blogAppDb
+    volumes:
+      - db_data:/var/lib/mysql
+    ports:
+      - "3306:3306"
+
+  frontend:
+    build: ./blog-app-front-end
+    ports:
+      - "3000:3000"
+
+  redis:
+    image: redis
+    ports:
+      - "6379:6379"
+
+volumes:
+  db_data:
